@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse indigenous art collection across Australia">
+    <title>Browse Art - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">Indigenous Art Atlas</a></h1>
+                </div>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html" class="active">Browse</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="guidelines.html">Guidelines</a></li>
+                        <li><a href="login.html" class="btn-login">Login</a></li>
+                        <li><a href="register.html" class="btn-register">Register</a></li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Browse Art Collection</h1>
+            <p>Explore indigenous art from across Australia</p>
+        </div>
+    </section>
+
+    <!-- Browse Section -->
+    <section class="browse-section">
+        <div class="container">
+            <div class="browse-layout">
+                <!-- Filters Sidebar -->
+                <aside class="filters-sidebar" id="filters-sidebar">
+                    <div class="filters-header">
+                        <h2>Filters</h2>
+                        <button class="btn-clear-filters" id="clear-filters">Clear All</button>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="filter-group">
+                        <label for="search-input">Search</label>
+                        <input type="text" id="search-input" placeholder="Search by title, artist, keywords..." class="search-input">
+                    </div>
+
+                    <!-- Art Type Filter -->
+                    <div class="filter-group">
+                        <h3>Art Type</h3>
+                        <div id="art-type-filters">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Art Period Filter -->
+                    <div class="filter-group">
+                        <h3>Art Period</h3>
+                        <div id="art-period-filters">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Location Filter -->
+                    <div class="filter-group">
+                        <h3>Location</h3>
+                        <div id="location-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="NSW"> NSW
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="VIC"> Victoria
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="QLD"> Queensland
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="SA"> South Australia
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="WA"> Western Australia
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="NT"> Northern Territory
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="TAS"> Tasmania
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="location" value="ACT"> ACT
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Results Section -->
+                <main class="browse-results">
+                    <!-- Results Header -->
+                    <div class="results-header">
+                        <div class="results-info">
+                            <span id="results-count">Loading...</span>
+                        </div>
+                        <div class="results-controls">
+                            <label for="sort-select">Sort by:</label>
+                            <select id="sort-select" class="sort-select">
+                                <option value="date-desc">Date Added (Newest)</option>
+                                <option value="date-asc">Date Added (Oldest)</option>
+                                <option value="title-asc">Title (A-Z)</option>
+                                <option value="title-desc">Title (Z-A)</option>
+                                <option value="views-desc">Most Viewed</option>
+                            </select>
+                            <button class="btn-toggle-filters mobile-only" id="toggle-filters" aria-label="Toggle filters">
+                                Filters
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Art Grid -->
+                    <div class="art-grid" id="art-results-grid">
+                        <!-- Art cards populated by JavaScript -->
+                    </div>
+
+                    <!-- No Results Message -->
+                    <div id="no-results" class="no-results" style="display: none;">
+                        <p>No art entries match your search criteria.</p>
+                        <button class="btn btn-primary" id="clear-filters-btn">Clear Filters</button>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <div id="loading-spinner" class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading art entries...</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Indigenous Art Atlas</h3>
+                    <p>A community-driven platform for documenting and celebrating indigenous art across Australia.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="browse.html">Browse Art</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="guidelines.html">Usage Guidelines</a></li>
+                        <li><a href="ethics.html">Ethical Considerations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Get Involved</h3>
+                    <ul>
+                        <li><a href="register.html">Create Account</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="submit-art.html">Submit Art</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-acknowledgment">
+                <p><strong>Acknowledgment of Country</strong></p>
+                <p>We acknowledge the Traditional Owners of Country throughout Australia and recognize their continuing connection to land, waters, and culture. We pay our respects to their Elders past, present, and emerging.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Indigenous Art Atlas. Created for COMP9030 Assignment.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">↑</button>
+
+    <!-- Scripts -->
+    <script src="data/mock-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/filter.js"></script>
+</body>
+</html>

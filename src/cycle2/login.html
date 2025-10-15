@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="index.html">Indigenous Art Atlas</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="register.html" class="btn-register">Register</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="auth-section">
+        <div class="auth-container">
+            <h1>Login to Your Account</h1>
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember"> Remember me
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <p class="auth-link">Don't have an account? <a href="register.html">Register here</a></p>
+            </form>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>
