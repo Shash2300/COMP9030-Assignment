@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Submit new indigenous art entry">
+    <title>Submit Art - Indigenous Art Atlas</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">Indigenous Art Atlas</a></h1>
+                </div>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="guidelines.html">Guidelines</a></li>
+                        <li><a href="dashboard.html" class="btn-login">Dashboard</a></li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Submit New Art Entry</h1>
+            <p>Share indigenous art with our community</p>
+        </div>
+    </section>
+
+    <!-- Submit Form Section -->
+    <section class="submit-form-section">
+        <div class="container">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator" id="progress-indicator">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Art Details</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Images</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Artist Info</div>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+
+            <!-- Multi-Step Form -->
+            <form id="submit-art-form" class="submit-form" novalidate>
+
+                <!-- Step 1: Art Details -->
+                <div class="form-step active" data-step="1">
+                    <h2>Step 1: Art Details</h2>
+
+                    <div class="form-group">
+                        <label for="art-title">Art Title <span class="required">*</span></label>
+                        <input type="text" id="art-title" name="title" required maxlength="200" class="form-control">
+                        <small class="form-help">Maximum 200 characters. <span id="title-counter">0/200</span></small>
+                        <span class="error-message" id="title-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="art-description">Description <span class="required">*</span></label>
+                        <textarea id="art-description" name="description" required rows="6" class="form-control"></textarea>
+                        <small class="form-help">Provide detailed description and cultural context.</small>
+                        <span class="error-message" id="description-error"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="art-type">Art Type <span class="required">*</span></label>
+                            <select id="art-type" name="art_type" required class="form-control">
+                                <option value="">-- Select type --</option>
+                                <option value="1">Cave Art</option>
+                                <option value="2">Rock Art</option>
+                                <option value="3">Mural</option>
+                                <option value="4">Sculpture</option>
+                                <option value="5">Installation</option>
+                                <option value="6">Gallery Piece</option>
+                            </select>
+                            <span class="error-message" id="type-error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="art-period">Art Period <span class="required">*</span></label>
+                            <select id="art-period" name="art_period" required class="form-control">
+                                <option value="">-- Select period --</option>
+                                <option value="1">Ancient (Pre-colonial)</option>
+                                <option value="2">Colonial Era</option>
+                                <option value="3">Modern (20th Century)</option>
+                                <option value="4">Contemporary (21st Century)</option>
+                            </select>
+                            <span class="error-message" id="period-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="condition-notes">Condition / Quality Notes</label>
+                        <textarea id="condition-notes" name="condition" rows="4" class="form-control"></textarea>
+                        <small class="form-help">Describe current condition, any damage, preservation efforts.</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Location -->
+                <div class="form-step" data-step="2">
+                    <h2>Step 2: Location Information</h2>
+
+                    <div class="form-group">
+                        <label>Select Location on Map <span class="required">*</span></label>
+                        <p class="form-help">Click on the map to set the art location, or search for an address.</p>
+                        <div id="submit-map" class="submit-map"></div>
+                        <span class="error-message" id="location-error"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="latitude">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" readonly class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" readonly class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location-description">Location Description</label>
+                        <input type="text" id="location-description" name="location_description"
+                               placeholder="e.g., Inside Gallery X, near old bridge" class="form-control">
+                        <small class="form-help">Provide context about the location</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="publicly-accessible" name="publicly_accessible">
+                            This location is publicly accessible
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="culturally-sensitive" name="culturally_sensitive">
+                            This location is culturally sensitive / restricted
+                        </label>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Important:</strong> If you mark this as culturally sensitive, the exact coordinates
+                        may be hidden or shown as a general area only. Admin will review your submission.
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(1)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Images -->
+                <div class="form-step" data-step="3">
+                    <h2>Step 3: Upload Images</h2>
+
+                    <div class="form-group">
+                        <label>Art Images <span class="required">*</span></label>
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-icon">📁</div>
+                            <p>Drag images here or click to browse</p>
+                            <small>Accepted: JPG, PNG | Max 5MB per image | Up to 6 images</small>
+                            <input type="file" id="image-upload" name="images" multiple accept="image/jpeg,image/png" hidden>
+                        </div>
+                        <span class="error-message" id="images-error"></span>
+                    </div>
+
+                    <div id="image-previews" class="image-previews">
+                        <!-- Image previews will be added here -->
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>📷 Tip:</strong> Upload clear, high-resolution images. The first image will be used as the thumbnail unless you select a different primary image.
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(4)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Artist Information -->
+                <div class="form-step" data-step="4">
+                    <h2>Step 4: Artist Information</h2>
+
+                    <div class="form-group">
+                        <label>Who is the artist?</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="artist_type" value="unknown" checked>
+                                Artist is Unknown
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="artist_type" value="self">
+                                I am the Artist
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="artist_type" value="other">
+                                Attributing to Another Artist
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="artist-self-fields" class="conditional-fields" style="display: none;">
+                        <div class="alert alert-info">
+                            This will link to your artist profile.
+                        </div>
+                    </div>
+
+                    <div id="artist-other-fields" class="conditional-fields" style="display: none;">
+                        <div class="form-group">
+                            <label for="artist-name">Artist Name</label>
+                            <input type="text" id="artist-name" name="artist_name" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="artist-info">Artist Information</label>
+                            <textarea id="artist-info" name="artist_info" rows="3" class="form-control"></textarea>
+                            <small class="form-help">Provide any known information about the artist</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="collaborators">Additional Artists / Collaborators</label>
+                        <input type="text" id="collaborators" name="collaborators"
+                               placeholder="e.g., Created with Youth Art Group" class="form-control">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(5)">Review →</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Review & Submit -->
+                <div class="form-step" data-step="5">
+                    <h2>Step 5: Review Your Submission</h2>
+
+                    <div id="review-summary" class="review-summary">
+                        <!-- Review content will be populated by JavaScript -->
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="permission-check" required>
+                            I have permission to submit this information
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="cultural-check" required>
+                            I confirm this submission respects cultural protocols
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="guidelines-check" required>
+                            I agree to the <a href="guidelines.html" target="_blank">Submission Guidelines</a>
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+                        <button type="submit" class="btn btn-primary">Submit for Review</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <h2>✓ Submission Received!</h2>
+            <p>Thank you! Your submission is now under review by our moderators.</p>
+            <p>You'll receive a notification when it's been approved.</p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">View My Submissions</button>
+                <button class="btn btn-secondary" onclick="window.location.href='submit-art.html'">Submit Another</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Indigenous Art Atlas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <!-- Scripts -->
+    <script src="data/mock-data.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>

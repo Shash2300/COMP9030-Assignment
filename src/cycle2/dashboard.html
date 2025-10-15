@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="index.html">Indigenous Art Atlas</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                        <li><a href="index.html" class="btn-secondary">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard-section">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>My Submissions</h1>
+                <a href="submit-art.html" class="btn btn-primary">+ Submit New Art</a>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" data-status="all">All (0)</button>
+                <button class="tab-btn" data-status="pending">Pending (0)</button>
+                <button class="tab-btn" data-status="approved">Approved (0)</button>
+                <button class="tab-btn" data-status="rejected">Rejected (0)</button>
+            </div>
+
+            <div class="submissions-list" id="submissions-list">
+                <div class="empty-state">
+                    <h2>No submissions yet</h2>
+                    <p>Start sharing indigenous art with the community!</p>
+                    <a href="submit-art.html" class="btn btn-primary">Submit Your First Entry</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas.</p></div>
+        </div>
+    </footer>
+
+    <script src="data/mock-data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
