@@ -85,21 +85,31 @@ function initBackToTop() {
  * Featured Art Grid
  * Renders recent art entries on the homepage
  */
-function initFeaturedArt() {
+async function initFeaturedArt() {
     const featuredArtGrid = document.getElementById('featured-art-grid');
 
     if (featuredArtGrid && typeof getRecentArt === 'function') {
-        const recentArt = getRecentArt(6);
-        featuredArtGrid.innerHTML = recentArt.map(art => createArtCard(art)).join('');
+        // Show loading state
+        featuredArtGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">Loading art entries...</p>';
 
-        // Update total entries count
-        const totalEntriesEl = document.getElementById('total-entries');
-        if (totalEntriesEl && typeof mockArtEntries !== 'undefined') {
-            animateCounter(totalEntriesEl, mockArtEntries.length);
+        // Fetch from backend API
+        const recentArt = await getRecentArt(6);
+
+        if (recentArt.length > 0) {
+            featuredArtGrid.innerHTML = recentArt.map(art => createArtCard(art)).join('');
+
+            // Update total entries count
+            const totalEntriesEl = document.getElementById('total-entries');
+            if (totalEntriesEl) {
+                const allArt = await getAllApprovedArt();
+                animateCounter(totalEntriesEl, allArt.length);
+            }
+
+            // Add click handlers to cards
+            addArtCardClickHandlers();
+        } else {
+            featuredArtGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">No art entries found. Be the first to submit!</p>';
         }
-
-        // Add click handlers to cards
-        addArtCardClickHandlers();
     }
 }
 
@@ -184,14 +194,18 @@ function animateCounter(element, target) {
  * Browse Page Filters
  * Handles filtering and searching on the browse page
  */
-function initBrowseFilters() {
+async function initBrowseFilters() {
     const artGrid = document.querySelector('.browse-section .art-grid');
 
     if (!artGrid) return;
 
-    // Initialize with all art
+    // Show loading state
+    artGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">Loading art entries...</p>';
+
+    // Initialize with all art from backend
     if (typeof getAllApprovedArt === 'function') {
-        renderBrowseArt(getAllApprovedArt());
+        const allArt = await getAllApprovedArt();
+        renderBrowseArt(allArt);
     }
 
     // Search functionality
@@ -352,7 +366,7 @@ function debounce(func, wait) {
  * Art Detail Page
  * Handles image gallery and lightbox functionality
  */
-function initArtDetail() {
+async function initArtDetail() {
     // Check if we're on the art detail page
     const artDetailSection = document.querySelector('.art-detail-section');
     if (!artDetailSection) return;
@@ -372,7 +386,12 @@ function initArtDetail() {
         return;
     }
 
-    const art = getArtEntryById(artId);
+    // Show loading state
+    document.querySelector('.art-detail-layout').innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">Loading art details...</p>';
+
+    // Fetch art from backend
+    const art = await getArtEntryById(artId);
+
     if (!art) {
         document.querySelector('.art-detail-layout').innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem;">
@@ -695,11 +714,28 @@ function initAuthForms() {
     // Login form
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            // Simulate login
-            localStorage.setItem('userLoggedIn', 'true');
-            window.location.href = 'dashboard.html';
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+
+            // Call backend API
+            const result = await API.login(username, password);
+
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(result.message || 'Login failed. Please check your credentials.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
         });
     }
 
@@ -718,7 +754,7 @@ function initAuthForms() {
         }
 
         // Form submission
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             // Validate passwords match
@@ -730,9 +766,31 @@ function initAuthForms() {
                 return;
             }
 
-            // Simulate registration
-            localStorage.setItem('userLoggedIn', 'true');
-            window.location.href = 'dashboard.html';
+            const userData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: password.value,
+                full_name: document.getElementById('full-name').value,
+                user_role: document.getElementById('user-role').value || 'artist'
+            };
+
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+
+            // Call backend API
+            const result = await API.register(userData);
+
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(result.message || 'Registration failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
         });
     }
 }
@@ -797,9 +855,13 @@ function initDashboard() {
     // Logout functionality
     const logoutBtn = document.querySelector('.btn-logout');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
+        logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            localStorage.removeItem('userLoggedIn');
+
+            // Call backend logout API
+            await API.logout();
+
+            // Redirect to homepage
             window.location.href = 'index.html';
         });
     }
