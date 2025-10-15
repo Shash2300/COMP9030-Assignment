@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="index.html">Indigenous Art Atlas</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="login.html" class="btn-login">Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="auth-section">
+        <div class="auth-container">
+            <h1>Create an Account</h1>
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" name="username" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" name="email" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" name="password" required class="form-control">
+                    <div class="password-strength" id="password-strength"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm_password" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="role" value="general" checked> General Public
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="role" value="artist"> Artist
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="agree_terms" required> I agree to the Terms & Conditions
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+                <p class="auth-link">Already have an account? <a href="login.html">Login here</a></p>
+            </form>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Indigenous Art Atlas - Discover and share indigenous art across Australia">
+    <title>Indigenous Art Atlas - Home</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">Indigenous Art Atlas</a></h1>
+                </div>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="guidelines.html">Guidelines</a></li>
+                        <li><a href="login.html" class="btn-login">Login</a></li>
+                        <li><a href="register.html" class="btn-register">Register</a></li>
+                    </ul>
+                </nav>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h2>Discover and Share Indigenous Art Across Australia</h2>
+                <p class="hero-subtitle">A community-driven platform celebrating indigenous art from ancient rock paintings to contemporary installations</p>
+                <div class="hero-buttons">
+                    <a href="#map-section" class="btn btn-primary">Explore the Map</a>
+                    <a href="register.html" class="btn btn-secondary">Submit Art</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section -->
+    <section class="map-section" id="map-section">
+        <div class="container">
+            <h2 class="section-title">Interactive Art Map</h2>
+            <p class="section-subtitle">Discover indigenous art locations across Australia. Click markers to learn more.</p>
+            <div id="map" class="map-container"></div>
+            <div class="map-legend">
+                <h3>Legend</h3>
+                <ul>
+                    <li><span class="legend-marker ancient"></span> Ancient Art</li>
+                    <li><span class="legend-marker contemporary"></span> Contemporary Art</li>
+                    <li><span class="legend-marker sensitive"></span> Protected Location (General Area)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Art Section -->
+    <section class="featured-art">
+        <div class="container">
+            <h2 class="section-title">Recently Added Art</h2>
+            <p class="section-subtitle">Explore the latest additions to our community collection</p>
+            <div class="art-grid" id="featured-art-grid">
+                <!-- Art cards will be dynamically loaded here by JavaScript -->
+            </div>
+            <div class="text-center">
+                <a href="browse.html" class="btn btn-primary">View All Art</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Preview Section -->
+    <section class="about-preview">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Our Mission</h2>
+                    <p>The Indigenous Art Atlas is dedicated to documenting, preserving, and celebrating indigenous art across Australia. We create a space where communities can share appropriate cultural knowledge while protecting sacred and sensitive sites.</p>
+                    <p>Our platform prioritizes cultural sensitivity, community input, and respectful engagement with indigenous art and heritage.</p>
+                    <a href="about.html" class="btn btn-secondary">Learn More</a>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-entries">0</div>
+                        <div class="stat-label">Art Entries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">States & Territories</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20,000+</div>
+                        <div class="stat-label">Years of History</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Indigenous Art Atlas</h3>
+                    <p>A community-driven platform for documenting and celebrating indigenous art across Australia.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="browse.html">Browse Art</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="guidelines.html">Usage Guidelines</a></li>
+                        <li><a href="ethics.html">Ethical Considerations</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Get Involved</h3>
+                    <ul>
+                        <li><a href="register.html">Create Account</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="submit-art.html">Submit Art</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-acknowledgment">
+                <p><strong>Acknowledgment of Country</strong></p>
+                <p>We acknowledge the Traditional Owners of Country throughout Australia and recognize their continuing connection to land, waters, and culture. We pay our respects to their Elders past, present, and emerging, and extend that respect to all Aboriginal and Torres Strait Islander peoples.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Indigenous Art Atlas. Created for COMP9030 Assignment.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+        ↑
+    </button>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <!-- Mock Data -->
+    <script src="data/mock-data.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>
