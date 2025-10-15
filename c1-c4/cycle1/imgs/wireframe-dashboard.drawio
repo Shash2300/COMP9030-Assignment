@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <mxfile host="app.diagrams.net">
   <diagram name="User Dashboard Wireframe" id="dashboard">
     <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1400" math="0" shadow="0">
@@ -7,7 +8,7 @@
 
         <!-- Browser Window -->
         <mxCell id="browser" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
-          <mxGeometry x="40" y="40" width="1120" height="1320" as="geometry" />
+          <mxGeometry x="40" y="40" width="1120" height="1280" as="geometry" />
         </mxCell>
 
         <!-- Header -->
@@ -17,7 +18,7 @@
 
         <!-- Sidebar Navigation (20%) -->
         <mxCell id="sidebar" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="40" y="120" width="220" height="1200" as="geometry" />
+          <mxGeometry x="40" y="120" width="220" height="1160" as="geometry" />
         </mxCell>
 
         <!-- User Profile Card -->
@@ -56,7 +57,7 @@
 
         <!-- Main Content Area (80%) -->
         <mxCell id="main-content" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;align=left;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="280" y="120" width="880" height="1200" as="geometry" />
+          <mxGeometry x="280" y="120" width="880" height="1160" as="geometry" />
         </mxCell>
 
         <!-- Dashboard Header -->
@@ -180,7 +181,7 @@
           <mxGeometry x="480" y="680" width="420" height="35" as="geometry" />
         </mxCell>
 
-        <mxCell id="card3-btn" value="Edit & Resubmit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f44336;strokeColor=none;fontColor=#ffffff;fontSize=11;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="card3-btn" value="Edit &amp; Resubmit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f44336;strokeColor=none;fontColor=#ffffff;fontSize=11;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="1020" y="640" width="110" height="30" as="geometry" />
         </mxCell>
 
@@ -207,7 +208,7 @@
 
         <!-- Footer -->
         <mxCell id="footer" value="FOOTER" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#3e2723;strokeColor=#000000;fontColor=#ffffff;align=center;" vertex="1" parent="1">
-          <mxGeometry x="40" y="1340" width="1120" height="20" as="geometry" />
+          <mxGeometry x="40" y="1300" width="1120" height="20" as="geometry" />
         </mxCell>
 
         <!-- Annotations -->
