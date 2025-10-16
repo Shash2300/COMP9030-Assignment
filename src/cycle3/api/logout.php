@@ -1,61 +1,21 @@
 <?php
-/**
- * Logout API Endpoint
- *
- * Handles user logout requests via POST method.
- * Destroys the current session and returns success status.
- *
- * Returns JSON response with success status
- *
- * AI Acknowledgment: API structure and session management
- * developed with assistance from Claude AI (Anthropic)
- *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
- */
+// Start session
+session_start();
 
-// Set JSON response header
-header('Content-Type: application/json');
+// Unset all of the session variables
+$_SESSION = [];
 
-// Enable CORS for development (adjust for production)
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Access-Control-Allow-Credentials: true');
-
-// Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
+// Destroy the session
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
 }
 
-// Accept both POST and GET for logout (GET for convenience)
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Method not allowed. Use POST or GET.'
-    ]);
-    exit();
-}
+session_destroy();
 
-require_once __DIR__ . '/../includes/auth.php';
-
-try {
-    // Perform logout
-    $result = logoutUser();
-
-    http_response_code(200);
-    echo json_encode($result);
-
-} catch (Exception $e) {
-    error_log("Logout API Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'An error occurred during logout.'
-    ]);
-}
-
-?>
+// Redirect to the homepage
+header('Location: ../../index.html');
+exit;

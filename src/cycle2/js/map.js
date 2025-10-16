@@ -14,7 +14,7 @@
 /**
  * Initialize the main interactive map on the homepage
  */
-function initializeMap() {
+async function initializeMap() {
     const mapContainer = document.getElementById('map');
 
     if (!mapContainer || typeof L === 'undefined') return;
@@ -31,8 +31,10 @@ function initializeMap() {
 
     // Add art markers if mock data is available
     if (typeof getAllApprovedArt === 'function') {
-        const artEntries = getAllApprovedArt();
-        addArtMarkers(map, artEntries);
+        const artEntries = await getAllApprovedArt();
+        if (Array.isArray(artEntries) && artEntries.length > 0) {
+            addArtMarkers(map, artEntries);
+        }
     }
 
     return map;
@@ -269,10 +271,10 @@ function initializeSubmitMap() {
 }
 
 // Initialize maps when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Initialize homepage map
     if (document.getElementById('map')) {
-        initializeMap();
+        await initializeMap();
     }
 
     // Initialize detail page map
@@ -281,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const artId = urlParams.get('id');
 
         if (artId && typeof getArtEntryById === 'function') {
-            const art = getArtEntryById(artId);
+            const art = await getArtEntryById(artId);
             if (art) {
                 initializeDetailMap(art.latitude, art.longitude, art.isSensitive);
             }

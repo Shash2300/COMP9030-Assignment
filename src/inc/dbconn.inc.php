@@ -1,9 +1,10 @@
 <?php
 
-define("DB_HOST", getenv('MYSQL_HOST'));
-define("DB_NAME", getenv('MYSQL_DATABASE'));
-define("DB_USER", getenv('MYSQL_USER'));
-define("DB_PASS", getenv('MYSQL_PASSWORD'));
+// IMPORTANT: Replace with your local database credentials
+define("DB_HOST", "localhost");
+define("DB_NAME", "web_dev_db");
+define("DB_USER", "root");
+define("DB_PASS", "password");
 
 $conn = @mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if (!$conn) {

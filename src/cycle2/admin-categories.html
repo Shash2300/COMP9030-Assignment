@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management - Admin Panel</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="admin-dashboard.html">Admin Panel</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="admin-dashboard.html">Dashboard</a></li>
+                        <li><a href="admin-moderation.html">Moderation</a></li>
+                        <li><a href="admin-users.html">Users</a></li>
+                        <li><a href="admin-categories.html" class="active">Categories</a></li>
+                        <li><a href="#" id="admin-logout" class="btn-secondary">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-section">
+        <div class="container">
+            <h1>Category Management</h1>
+            <p>Manage art types and time periods</p>
+
+            <div class="admin-grid">
+                <!-- Art Types Section -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Art Types</h2>
+                        <button class="btn btn-primary btn-sm" onclick="showAddCategoryModal('type')">+ Add Art Type</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Usage Count</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="art-types-tbody">
+                                <tr><td colspan="3" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Art Periods Section -->
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h2>Time Periods</h2>
+                        <button class="btn btn-primary btn-sm" onclick="showAddCategoryModal('period')">+ Add Period</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Usage Count</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="art-periods-tbody">
+                                <tr><td colspan="3" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add/Edit Category Modal -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCategoryModal()">&times;</button>
+            <h2 id="modal-title">Add Category</h2>
+            <form id="category-form">
+                <input type="hidden" id="category-id">
+                <input type="hidden" id="category-type">
+
+                <div class="form-group">
+                    <label for="category-name">Name <span class="required">*</span></label>
+                    <input type="text" id="category-name" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="category-description">Description</label>
+                    <textarea id="category-description" rows="3" class="form-control"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas - Admin Panel</p></div>
+        </div>
+    </footer>
+
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-categories.js"></script>
+</body>
+</html>

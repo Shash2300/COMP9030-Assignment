@@ -71,10 +71,10 @@ function registerUser($pdo, $username, $email, $password, $role = 'user') {
             ];
         }
 
-        // Validate role
-        $validRoles = ['user', 'admin', 'moderator'];
+        // Validate role - match database enum values
+        $validRoles = ['artist', 'researcher', 'admin'];
         if (!in_array($role, $validRoles)) {
-            $role = 'user';
+            $role = 'artist'; // Default to artist
         }
 
         // Check if username already exists
@@ -102,13 +102,14 @@ function registerUser($pdo, $username, $email, $password, $role = 'user') {
         // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert new user
+        // Insert new user - use user_role column
         $stmt = $pdo->prepare(
-            "INSERT INTO users (username, email, password_hash, role, created_at)
-             VALUES (?, ?, ?, ?, NOW())"
+            "INSERT INTO users (username, email, password_hash, user_role, full_name)
+             VALUES (?, ?, ?, ?, ?)"
         );
 
-        $stmt->execute([$username, $email, $hashedPassword, $role]);
+        $fullName = isset($fullName) ? $fullName : $username;
+        $stmt->execute([$username, $email, $hashedPassword, $role, $fullName]);
 
         return [
             'success' => true,
@@ -145,7 +146,7 @@ function loginUser($pdo, $username, $password) {
 
         // Check if user exists (by username or email)
         $stmt = $pdo->prepare(
-            "SELECT user_id, username, email, password_hash, role
+            "SELECT user_id, username, email, password_hash, user_role
              FROM users
              WHERE username = ? OR email = ?"
         );
@@ -171,7 +172,7 @@ function loginUser($pdo, $username, $password) {
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = $user['role'];
+        $_SESSION['role'] = $user['user_role'];
         $_SESSION['logged_in'] = true;
 
         // Update last login time
@@ -187,7 +188,7 @@ function loginUser($pdo, $username, $password) {
                 'user_id' => $user['user_id'],
                 'username' => $user['username'],
                 'email' => $user['email'],
-                'role' => $user['role']
+                'role' => $user['user_role']
             ]
         ];
 

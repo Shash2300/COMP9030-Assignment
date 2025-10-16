@@ -80,30 +80,7 @@
                     <div class="filter-group">
                         <h3>Location</h3>
                         <div id="location-filters">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="NSW"> NSW
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="VIC"> Victoria
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="QLD"> Queensland
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="SA"> South Australia
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="WA"> Western Australia
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="NT"> Northern Territory
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="TAS"> Tasmania
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="location" value="ACT"> ACT
-                            </label>
+                            <!-- Populated by JavaScript -->
                         </div>
                     </div>
                 </aside>
@@ -192,9 +169,12 @@
 
     <!-- Scripts -->
     <script src="data/mock-data.js"></script>
-    <!-- API Connection (Backend Integration) -->
-    <script src="js/api.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/filter.js"></script>
+
+    <!-- API Wrapper for Backend Integration -->
+    <script src="js/api-wrapper.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/browse.js"></script>
 </body>
 </html>

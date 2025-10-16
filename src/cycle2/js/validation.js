@@ -223,10 +223,12 @@ function validateForm(form) {
         }
     });
 
-    // Password validation
+    // Password validation (only for registration forms)
     const passwordFields = form.querySelectorAll('input[type="password"]');
+    const isRegistrationForm = form.id === 'register-form';
+
     passwordFields.forEach(field => {
-        if (field.value && field.name === 'password') {
+        if (field.value && field.name === 'password' && isRegistrationForm) {
             const result = validatePassword(field.value);
             if (!result.isValid) {
                 isValid = false;
@@ -310,11 +312,14 @@ function initializeFormValidation() {
             }));
         });
 
-        // Add real-time validation to password fields
-        const passwordFields = form.querySelectorAll('input[name="password"]');
-        passwordFields.forEach(field => {
-            addFieldValidation(field, validatePassword);
-        });
+        // Add real-time validation to password fields (only for registration)
+        const isRegistrationForm = form.id === 'register-form';
+        if (isRegistrationForm) {
+            const passwordFields = form.querySelectorAll('input[name="password"]');
+            passwordFields.forEach(field => {
+                addFieldValidation(field, validatePassword);
+            });
+        }
 
         // Add real-time validation to confirm password
         const confirmPasswordField = form.querySelector('input[name="confirm-password"], input[name="confirmPassword"]');

@@ -124,10 +124,10 @@ function createArtEntry($pdo, $data) {
  */
 function getArtEntries($pdo, $filters = []) {
     try {
-        // Base query
+        // Base query - use correct column names from schema
         $query = "SELECT ae.*, u.username as submitted_by_username
                   FROM art_entries ae
-                  LEFT JOIN users u ON ae.submitted_by = u.user_id
+                  LEFT JOIN users u ON ae.user_id = u.user_id
                   WHERE 1=1";
 
         $params = [];
@@ -138,13 +138,13 @@ function getArtEntries($pdo, $filters = []) {
             $params[] = $filters['status'];
         }
 
-        if (isset($filters['culture'])) {
-            $query .= " AND ae.culture = ?";
-            $params[] = $filters['culture'];
+        if (isset($filters['indigenous_group'])) {
+            $query .= " AND ae.indigenous_group = ?";
+            $params[] = $filters['indigenous_group'];
         }
 
         if (isset($filters['user_id'])) {
-            $query .= " AND ae.submitted_by = ?";
+            $query .= " AND ae.user_id = ?";
             $params[] = $filters['user_id'];
         }
 
@@ -153,8 +153,13 @@ function getArtEntries($pdo, $filters = []) {
             $query .= " AND ae.status = 'approved'";
         }
 
-        // Order by creation date (newest first)
-        $query .= " ORDER BY ae.created_at DESC";
+        // Order by submission date (newest first)
+        $query .= " ORDER BY ae.submitted_at DESC";
+
+        // Add limit if specified
+        if (isset($filters['limit'])) {
+            $query .= " LIMIT " . (int)$filters['limit'];
+        }
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
@@ -188,7 +193,7 @@ function getArtEntry($pdo, $entryId) {
         $stmt = $pdo->prepare(
             "SELECT ae.*, u.username as submitted_by_username
              FROM art_entries ae
-             LEFT JOIN users u ON ae.submitted_by = u.user_id
+             LEFT JOIN users u ON ae.user_id = u.user_id
              WHERE ae.entry_id = ?"
         );
 
@@ -205,7 +210,7 @@ function getArtEntry($pdo, $entryId) {
         // Check permissions - only show pending entries to admin or owner
         if ($entry['status'] !== 'approved' &&
             !isAdmin() &&
-            getCurrentUserId() != $entry['submitted_by']) {
+            getCurrentUserId() != $entry['user_id']) {
             return [
                 'success' => false,
                 'message' => 'Access denied.'

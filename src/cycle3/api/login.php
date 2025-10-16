@@ -1,27 +1,15 @@
 <?php
 /**
  * Login API Endpoint
- *
- * Handles user login requests via POST method.
- *
- * Expected POST data:
- * - username: Username or email
- * - password: User password
- *
- * Returns JSON response with success status and user data
- *
- * AI Acknowledgment: API structure and security implementation
- * developed with assistance from Claude AI (Anthropic)
- *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
+ * Handles user login with proper database schema
  */
+
+require_once '../config/dbconn.php';
 
 // Set JSON response header
 header('Content-Type: application/json');
 
-// Enable CORS for development (adjust for production)
+// Enable CORS for development
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -32,57 +20,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Method not allowed. Use POST.'
-    ]);
-    exit();
-}
+// Start session
+session_start();
 
-require_once __DIR__ . '/../config/dbconn.php';
-require_once __DIR__ . '/../includes/auth.php';
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get the raw POST data
+    $json_data = file_get_contents("php://input");
+    $data = json_decode($json_data, true);
 
-try {
-    // Get POST data
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    // Fallback to $_POST if JSON parsing fails
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        $data = $_POST;
-    }
-
-    // Validate input
+    // Validate the data
     if (empty($data['username']) || empty($data['password'])) {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Username and password are required.'
+            'message' => 'Please fill in all the required fields.'
         ]);
-        exit();
+        exit;
     }
 
-    // Attempt login
-    $result = loginUser($pdo, $data['username'], $data['password']);
+    // Sanitize the data
+    $username = htmlspecialchars(trim($data['username']), ENT_QUOTES, 'UTF-8');
+    $password = $data['password'];
 
-    // Set appropriate HTTP status code
-    if ($result['success']) {
+    // Check if the user exists - use correct column name user_role
+    $stmt = $pdo->prepare("SELECT user_id, username, email, password_hash, user_role, full_name FROM users WHERE username = ? OR email = ?");
+    $stmt->execute([$username, $username]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password_hash'])) {
+        // Set session variables
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['user_role'];
+        $_SESSION['logged_in'] = true;
+
+        // Update last login time
+        $stmt = $pdo->prepare("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE user_id = ?");
+        $stmt->execute([$user['user_id']]);
+
         http_response_code(200);
+        echo json_encode([
+            'success' => true,
+            'message' => 'Login successful.',
+            'user' => [
+                'user_id' => $user['user_id'],
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'role' => $user['user_role']
+            ]
+        ]);
     } else {
         http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid credentials.'
+        ]);
     }
-
-    echo json_encode($result);
-
-} catch (Exception $e) {
-    error_log("Login API Error: " . $e->getMessage());
-    http_response_code(500);
+} else {
+    http_response_code(405);
     echo json_encode([
         'success' => false,
-        'message' => 'An error occurred during login.'
+        'message' => 'Method not allowed.'
     ]);
 }
-
-?>

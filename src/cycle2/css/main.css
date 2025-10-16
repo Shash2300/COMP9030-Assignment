@@ -1364,3 +1364,93 @@ a:hover {
     background: var(--gray-100);
     border-radius: var(--border-radius);
 }
+
+/* ========== Skeleton Loading ========== */
+.art-card-skeleton {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--gray-200);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-content {
+    padding: 1.5rem;
+}
+
+.skeleton-title {
+    width: 70%;
+    height: 1.25rem;
+    background-color: var(--gray-200);
+    margin-bottom: 0.75rem;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-badges {
+    width: 50%;
+    height: 1rem;
+    background-color: var(--gray-200);
+    margin-bottom: 0.75rem;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-desc {
+    width: 100%;
+    height: 3rem;
+    background-color: var(--gray-200);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: var(--gray-200);
+    }
+    50% {
+        background-color: var(--gray-300);
+    }
+    100% {
+        background-color: var(--gray-200);
+    }
+}
+
+/* ========== Image Zoom ========== */
+.gallery-main {
+    overflow: hidden;
+}
+
+.main-image:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* ========== Art Detail Skeleton ========== */
+.art-detail-skeleton .skeleton-title {
+    width: 60%;
+    height: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.art-detail-skeleton .skeleton-badges {
+    width: 40%;
+    height: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.art-detail-skeleton .skeleton-desc {
+    width: 100%;
+    height: 10rem;
+    margin-bottom: 2rem;
+}
+
+.art-detail-skeleton .skeleton-sidebar {
+    width: 100%;
+    height: 20rem;
+    background-color: var(--gray-200);
+    animation: pulse 1.5s infinite ease-in-out;
+}

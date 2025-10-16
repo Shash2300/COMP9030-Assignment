@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Profile - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="index.html">Indigenous Art Atlas</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="#" class="btn-secondary" id="logout-link">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Artist Profile</h1>
+            <p>Manage your artist information and portfolio</p>
+        </div>
+    </section>
+
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-layout">
+                <!-- Profile Form -->
+                <div class="profile-main">
+                    <div class="profile-card">
+                        <h2>Profile Information</h2>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="display-name">Display Name <span class="required">*</span></label>
+                                <input type="text" id="display-name" name="display_name" required class="form-control">
+                                <small class="form-help">This name will be shown on your art entries</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bio">Artist Bio</label>
+                                <textarea id="bio" name="bio" rows="6" class="form-control" maxlength="1000"></textarea>
+                                <small class="form-help">Tell visitors about yourself and your art (max 1000 characters)</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="location" class="form-control" placeholder="e.g., Sydney, NSW">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="show-contact" name="show_contact">
+                                    Make my contact information public
+                                </label>
+                            </div>
+
+                            <div id="contact-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="website">Website</label>
+                                    <input type="url" id="website" name="website" class="form-control" placeholder="https://...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="social-media">Social Media</label>
+                                    <input type="text" id="social-media" name="social_media" class="form-control" placeholder="Instagram, Facebook, etc.">
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Profile Sidebar -->
+                <aside class="profile-sidebar">
+                    <div class="sidebar-card">
+                        <h3>Profile Stats</h3>
+                        <dl class="stats-list">
+                            <dt>Total Submissions:</dt>
+                            <dd id="total-submissions">0</dd>
+
+                            <dt>Approved Entries:</dt>
+                            <dd id="approved-entries">0</dd>
+
+                            <dt>Member Since:</dt>
+                            <dd id="member-since">-</dd>
+                        </dl>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3>Quick Links</h3>
+                        <ul class="quick-links">
+                            <li><a href="dashboard.html">My Submissions</a></li>
+                            <li><a href="submit-art.html">Submit New Art</a></li>
+                            <li><a href="browse.html">Browse Gallery</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Artist's Portfolio -->
+            <div class="portfolio-section">
+                <h2>My Portfolio</h2>
+                <p>All approved art entries attributed to you</p>
+                <div class="art-grid" id="portfolio-grid">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/api-wrapper.js"></script>
+    <script src="js/artist-profile.js"></script>
+</body>
+</html>

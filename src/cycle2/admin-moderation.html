@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Moderation - Admin Panel</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="admin-dashboard.html">Admin Panel</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="admin-dashboard.html">Dashboard</a></li>
+                        <li><a href="admin-moderation.html" class="active">Moderation</a></li>
+                        <li><a href="admin-users.html">Users</a></li>
+                        <li><a href="admin-categories.html">Categories</a></li>
+                        <li><a href="#" id="admin-logout" class="btn-secondary">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-section">
+        <div class="container">
+            <h1>Art Submission Moderation</h1>
+
+            <!-- Filter Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-status="pending">Pending (<span id="pending-count">0</span>)</button>
+                <button class="tab-btn" data-status="approved">Approved (<span id="approved-count">0</span>)</button>
+                <button class="tab-btn" data-status="rejected">Rejected (<span id="rejected-count">0</span>)</button>
+                <button class="tab-btn" data-status="all">All (<span id="all-count">0</span>)</button>
+            </div>
+
+            <!-- Submissions List -->
+            <div id="submissions-container">
+                <p>Loading submissions...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Moderation Modal -->
+    <div id="moderation-modal" class="modal">
+        <div class="modal-content modal-large">
+            <button class="modal-close" onclick="closeModerationModal()">&times;</button>
+            <div id="modal-content-area">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas - Admin Panel</p></div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-moderation.js"></script>
+</body>
+</html>

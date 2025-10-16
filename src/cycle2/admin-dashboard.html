@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="admin-dashboard.html">Admin Panel</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
+                        <li><a href="admin-moderation.html">Moderation</a></li>
+                        <li><a href="admin-users.html">Users</a></li>
+                        <li><a href="admin-categories.html">Categories</a></li>
+                        <li><a href="#" id="admin-logout" class="btn-secondary">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-section">
+        <div class="container">
+            <h1>Administrator Dashboard</h1>
+            <p>Platform overview and quick actions</p>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-value" id="pending-count">0</div>
+                    <div class="stat-label">Pending Submissions</div>
+                    <a href="admin-moderation.html?status=pending" class="stat-link">Review Now →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="total-users">0</div>
+                    <div class="stat-label">Total Users</div>
+                    <a href="admin-users.html" class="stat-link">Manage Users →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🎨</div>
+                    <div class="stat-value" id="approved-count">0</div>
+                    <div class="stat-label">Approved Entries</div>
+                    <a href="browse.html" class="stat-link">View Gallery →</a>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🚩</div>
+                    <div class="stat-value" id="reports-count">0</div>
+                    <div class="stat-label">Content Reports</div>
+                    <a href="admin-reports.html" class="stat-link">Review Reports →</a>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="admin-section-card">
+                <h2>Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <a href="admin-moderation.html" class="action-card">
+                        <h3>Review Submissions</h3>
+                        <p>Moderate pending art entries</p>
+                    </a>
+                    <a href="admin-users.html" class="action-card">
+                        <h3>User Management</h3>
+                        <p>Manage user accounts and roles</p>
+                    </a>
+                    <a href="admin-categories.html" class="action-card">
+                        <h3>Manage Categories</h3>
+                        <p>Edit art types and periods</p>
+                    </a>
+                    <a href="admin-reports.html" class="action-card">
+                        <h3>Content Reports</h3>
+                        <p>Review flagged content</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="admin-section-card">
+                <h2>Recent Activity</h2>
+                <div id="recent-activity">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas - Admin Panel</p></div>
+        </div>
+    </footer>
+
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

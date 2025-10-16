@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Edit your art submission">
+    <title>Edit Submission - Indigenous Art Atlas</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><a href="index.html">Indigenous Art Atlas</a></h1>
+                </div>
+                <nav class="main-nav" id="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="dashboard.html" class="btn-login">Dashboard</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Edit Art Entry</h1>
+            <p>Update your submission details</p>
+        </div>
+    </section>
+
+    <!-- Edit Form Section -->
+    <section class="submit-form-section">
+        <div class="container">
+            <form id="edit-art-form" class="submit-form">
+
+                <div class="form-section">
+                    <h2>Art Details</h2>
+
+                    <div class="form-group">
+                        <label for="art-title">Art Title <span class="required">*</span></label>
+                        <input type="text" id="art-title" name="title" required maxlength="200" class="form-control">
+                        <small class="form-help">Maximum 200 characters.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="art-description">Description <span class="required">*</span></label>
+                        <textarea id="art-description" name="description" required rows="6" class="form-control"></textarea>
+                        <small class="form-help">Provide detailed description and cultural context.</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="art-type">Art Type <span class="required">*</span></label>
+                            <select id="art-type" name="art_type" required class="form-control">
+                                <option value="">-- Select type --</option>
+                                <option value="rock_art">Rock Art</option>
+                                <option value="bark_painting">Bark Painting</option>
+                                <option value="contemporary">Contemporary</option>
+                                <option value="sculpture">Sculpture</option>
+                                <option value="ceremonial">Ceremonial</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="art-period">Art Period <span class="required">*</span></label>
+                            <select id="art-period" name="time_period" required class="form-control">
+                                <option value="">-- Select period --</option>
+                                <option value="ancient">Ancient (Pre-colonial)</option>
+                                <option value="historical">Colonial Era</option>
+                                <option value="contemporary">Contemporary (21st Century)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Location Information</h2>
+
+                    <div class="form-group">
+                        <label for="location-name">Location Name <span class="required">*</span></label>
+                        <input type="text" id="location-name" name="location_name" required class="form-control">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="latitude">Latitude <span class="required">*</span></label>
+                            <input type="text" id="latitude" name="latitude" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">Longitude <span class="required">*</span></label>
+                            <input type="text" id="longitude" name="longitude" required class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location-sensitivity">Location Sensitivity <span class="required">*</span></label>
+                        <select id="location-sensitivity" name="location_sensitivity" required class="form-control">
+                            <option value="exact">Exact Location (Public)</option>
+                            <option value="approximate">Approximate Area Only</option>
+                            <option value="hidden">Hidden (Culturally Sensitive)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Artist Information</h2>
+
+                    <div class="form-group">
+                        <label for="artist-name">Artist Name</label>
+                        <input type="text" id="artist-name" name="artist_name" class="form-control">
+                    </div>
+                </div>
+
+                <input type="hidden" id="entry-id" name="entry_id">
+
+                <div class="form-actions">
+                    <a href="dashboard.html" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 Indigenous Art Atlas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script src="js/api.js"></script>
+    <script src="js/edit-submission.js"></script>
+</body>
+</html>

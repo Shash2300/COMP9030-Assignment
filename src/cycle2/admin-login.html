@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Indigenous Art Atlas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><h1><a href="index.html">Indigenous Art Atlas</a></h1></div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse</a></li>
+                        <li><a href="login.html">User Login</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-card">
+                <h1>Administrator Login</h1>
+                <p class="auth-subtitle">Secure access for platform administrators</p>
+
+                <form id="admin-login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="admin-email">Admin Email</label>
+                        <input type="email" id="admin-email" name="email" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" name="password" required class="form-control">
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Restricted Access</strong>
+                        <p>This area is for authorized administrators only. Unauthorized access attempts will be logged.</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Login to Admin Panel</button>
+                </form>
+
+                <div class="auth-links">
+                    <a href="login.html">Regular user? Login here</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom"><p>&copy; 2024 Indigenous Art Atlas.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/admin-login.js"></script>
+</body>
+</html>

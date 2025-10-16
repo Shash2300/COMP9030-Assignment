@@ -199,20 +199,9 @@
 
     <!-- Scripts -->
     <script src="data/mock-data.js"></script>
-    <!-- API Connection (Backend Integration) -->
-    <script src="js/api.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
     <script src="js/map.js"></script>
-    <script src="js/image-gallery.js"></script>
-    <script>
-        // Load art detail on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get art ID from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const artId = urlParams.get('id') || 1; // Default to ID 1
-
-            loadArtDetail(artId);
-        });
-    </script>
+    <script src="js/art-detail.js"></script>
 </body>
 </html>
