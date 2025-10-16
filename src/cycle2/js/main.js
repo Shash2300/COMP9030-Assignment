@@ -192,59 +192,248 @@ async function handleDelete(e) {
 
             alert('Entry deleted successfully.');
         } else {
-            alert(result.message || 'Failed to delete entry.');
-            btn.disabled = false;
-            btn.textContent = originalText;
+            field.classList.remove('error');
+            hideFieldError(field);
         }
-    } catch (error) {
-        console.error('Error deleting entry:', error);
-        alert('An error occurred while deleting the entry.');
-        btn.disabled = false;
-        btn.textContent = originalText;
+    });
+
+    return isValid;
+}
+
+/**
+ * Show error message for a field
+ * @param {HTMLElement} field - Form field element
+ * @param {string} message - Error message
+ */
+function showFieldError(field, message) {
+    let errorEl = field.parentElement.querySelector('.error-message');
+    if (!errorEl) {
+        errorEl = document.createElement('span');
+        errorEl.className = 'error-message';
+        field.parentElement.appendChild(errorEl);
+    }
+    errorEl.textContent = message;
+}
+
+/**
+ * Hide error message for a field
+ * @param {HTMLElement} field - Form field element
+ */
+function hideFieldError(field) {
+    const errorEl = field.parentElement.querySelector('.error-message');
+    if (errorEl) {
+        errorEl.remove();
     }
 }
 
-// Update user info in header
-function updateUserInfo() {
-    if (currentUser && currentUser.username) {
-        const header = document.querySelector('.dashboard-header h1');
-        if (header) {
-            header.textContent = `My Submissions - ${currentUser.username}`;
+/**
+ * Handle image upload and preview
+ * @param {Event} event - Change event
+ */
+function handleImageUpload(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('image-previews');
+
+    if (!previewContainer) return;
+
+    Array.from(files).forEach(file => {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewHtml = `
+                    <div class="image-preview">
+                        <img src="${e.target.result}" alt="Preview">
+                        <div class="image-preview-actions">
+                            <button type="button" class="remove-image" title="Remove">×</button>
+                        </div>
+                    </div>
+                `;
+                previewContainer.insertAdjacentHTML('beforeend', previewHtml);
+
+                // Add remove handler
+                const removeBtn = previewContainer.lastElementChild.querySelector('.remove-image');
+                removeBtn.addEventListener('click', function() {
+                    this.closest('.image-preview').remove();
+                });
+            };
+            reader.readAsDataURL(file);
         }
+    });
+}
+
+/**
+ * Show success modal after form submission
+ */
+function showSuccessModal() {
+    const modal = document.getElementById('success-modal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Redirect to dashboard after 3 seconds
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 3000);
     }
 }
 
-// Helper functions
-function formatArtType(type) {
-    const mapping = {
-        'rock_art': 'Rock Art',
-        'bark_painting': 'Bark Painting',
-        'contemporary': 'Contemporary',
-        'sculpture': 'Sculpture',
-        'ceremonial': 'Ceremonial',
-        'other': 'Other'
-    };
-    return mapping[type] || type;
+/**
+ * Authentication Forms
+ * Login and registration form validation
+ */
+function initAuthForms() {
+    // Login form
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+
+            // Call backend API
+            const result = await API.login(username, password);
+
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(result.message || 'Login failed. Please check your credentials.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    }
+
+    // Registration form
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const passwordStrength = document.querySelector('.password-strength');
+
+        if (passwordInput && passwordStrength) {
+            passwordInput.addEventListener('input', () => {
+                const strength = calculatePasswordStrength(passwordInput.value);
+                passwordStrength.className = 'password-strength ' + strength;
+            });
+        }
+
+        // Form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate passwords match
+            const password = document.getElementById('reg-password');
+            const confirmPassword = document.getElementById('confirm-password');
+
+            if (password && confirmPassword && password.value !== confirmPassword.value) {
+                showFieldError(confirmPassword, 'Passwords do not match');
+                return;
+            }
+
+            const userData = {
+                username: document.getElementById('reg-username').value,
+                email: document.getElementById('reg-email').value,
+                password: password.value,
+                full_name: document.getElementById('reg-username').value,
+                user_role: document.querySelector('input[name="role"]:checked')?.value || 'artist'
+            };
+
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+
+            // Call backend API
+            const result = await API.register(userData);
+
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                alert(result.message || 'Registration failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    }
 }
 
-function formatPeriod(period) {
-    const mapping = {
-        'ancient': 'Ancient',
-        'historical': 'Colonial Era',
-        'contemporary': 'Contemporary'
-    };
-    return mapping[period] || period;
+/**
+ * Calculate password strength
+ * @param {string} password - Password to check
+ * @returns {string} Strength level: 'weak', 'medium', or 'strong'
+ */
+function calculatePasswordStrength(password) {
+    if (password.length < 6) return 'weak';
+
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+    if (strength <= 1) return 'weak';
+    if (strength <= 3) return 'medium';
+    return 'strong';
 }
 
-function formatDate(dateString) {
-    if (!dateString) return 'Unknown';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' });
-}
+/**
+ * Dashboard
+ * User dashboard with tabs
+ */
+function initDashboard() {
+    const dashboardSection = document.querySelector('.dashboard-section');
+    if (!dashboardSection) return;
 
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    // Check if user is logged in (simulated)
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    if (!isLoggedIn) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Tab switching
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.getAttribute('data-tab');
+
+            // Update active tab button
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show corresponding tab content
+            tabContents.forEach(content => {
+                if (content.id === tabName + '-tab') {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Logout functionality
+    const logoutBtn = document.querySelector('.btn-logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            // Call backend logout API
+            await API.logout();
+
+            // Redirect to homepage
+            window.location.href = 'index.html';
+        });
+    }
 }
