@@ -1,29 +1,17 @@
 <?php
 /**
- * Art Entries CRUD Operations
- *
- * Handles Create, Read, Update, Delete operations for art entries
- * in the Indigenous Art Atlas application.
- *
- * Security Features:
- * - Prepared statements for SQL injection prevention
- * - Input validation and sanitization
- * - User permission checks
- * - XSS prevention with htmlspecialchars
- *
- * AI Acknowledgment: CRUD operations and data validation patterns
- * developed with assistance from Claude AI (Anthropic)
+ * Art Entries CRUD Operations - FIXED FOR CORRECT SCHEMA
  *
  * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
+ * @author Shishir Saurav (Updated to match schema)
+ * @version 2.0
  */
 
 require_once __DIR__ . '/../config/dbconn.php';
 require_once __DIR__ . '/auth.php';
 
 /**
- * Create a new art entry
+ * Create a new art entry - FIXED to match actual database schema
  *
  * @param PDO $pdo Database connection
  * @param array $data Art entry data
@@ -31,78 +19,104 @@ require_once __DIR__ . '/auth.php';
  */
 function createArtEntry($pdo, $data) {
     try {
+        // Map form field names to database column names
+        $title = $data['title'] ?? '';
+        $description = $data['description'] ?? '';
+        $artType = $data['art_type'] ?? $data['artType'] ?? 'other';
+        $timePeriod = $data['time_period'] ?? $data['period'] ?? 'contemporary';
+        $locationName = $data['location_name'] ?? $data['location_description'] ?? $data['location'] ?? '';
+        $latitude = $data['latitude'] ?? '';
+        $longitude = $data['longitude'] ?? '';
+        $artistName = $data['artist_name'] ?? $data['artistName'] ?? $data['artist'] ?? 'Unknown';
+        $indigenousGroup = $data['indigenous_group'] ?? $data['indigenousGroup'] ?? $data['culture'] ?? '';
+        $culturalSignificance = $data['cultural_significance'] ?? $data['culturalSignificance'] ?? '';
+        
+        // Handle location sensitivity
+        $isSensitive = isset($data['culturally_sensitive']) && $data['culturally_sensitive'];
+        $locationSensitivity = $isSensitive ? 'hidden' : 'exact';
+
         // Validate required fields
-        $requiredFields = ['title', 'artist', 'culture', 'location', 'latitude', 'longitude'];
-        foreach ($requiredFields as $field) {
-            if (empty($data[$field])) {
-                return [
-                    'success' => false,
-                    'message' => "Field '$field' is required."
-                ];
-            }
+        if (empty($title)) {
+            return ['success' => false, 'message' => "Title is required."];
+        }
+        if (empty($description)) {
+            return ['success' => false, 'message' => "Description is required."];
+        }
+        if (empty($locationName)) {
+            return ['success' => false, 'message' => "Location is required."];
+        }
+        if (empty($latitude) || empty($longitude)) {
+            return ['success' => false, 'message' => "Location coordinates are required."];
         }
 
         // Validate coordinates
-        if (!is_numeric($data['latitude']) || !is_numeric($data['longitude'])) {
-            return [
-                'success' => false,
-                'message' => 'Invalid coordinates.'
-            ];
+        if (!is_numeric($latitude) || !is_numeric($longitude)) {
+            return ['success' => false, 'message' => 'Invalid coordinates.'];
         }
 
-        if ($data['latitude'] < -90 || $data['latitude'] > 90) {
-            return [
-                'success' => false,
-                'message' => 'Latitude must be between -90 and 90.'
-            ];
+        if ($latitude < -90 || $latitude > 90) {
+            return ['success' => false, 'message' => 'Latitude must be between -90 and 90.'];
         }
 
-        if ($data['longitude'] < -180 || $data['longitude'] > 180) {
-            return [
-                'success' => false,
-                'message' => 'Longitude must be between -180 and 180.'
-            ];
+        if ($longitude < -180 || $longitude > 180) {
+            return ['success' => false, 'message' => 'Longitude must be between -180 and 180.'];
         }
 
         // Get user ID
         $userId = getCurrentUserId();
         if (!$userId) {
-            return [
-                'success' => false,
-                'message' => 'User not authenticated.'
-            ];
+            return ['success' => false, 'message' => 'User not authenticated.'];
         }
 
-        // Prepare data
-        $title = htmlspecialchars(trim($data['title']), ENT_QUOTES, 'UTF-8');
-        $artist = htmlspecialchars(trim($data['artist']), ENT_QUOTES, 'UTF-8');
-        $culture = htmlspecialchars(trim($data['culture']), ENT_QUOTES, 'UTF-8');
-        $yearCreated = isset($data['year_created']) ? (int)$data['year_created'] : null;
-        $medium = isset($data['medium']) ? htmlspecialchars(trim($data['medium']), ENT_QUOTES, 'UTF-8') : null;
-        $description = isset($data['description']) ? htmlspecialchars(trim($data['description']), ENT_QUOTES, 'UTF-8') : null;
-        $location = htmlspecialchars(trim($data['location']), ENT_QUOTES, 'UTF-8');
-        $latitude = (float)$data['latitude'];
-        $longitude = (float)$data['longitude'];
-        $imageUrl = isset($data['image_url']) ? filter_var($data['image_url'], FILTER_SANITIZE_URL) : null;
+        // Sanitize data
+        $title = htmlspecialchars(trim($title), ENT_QUOTES, 'UTF-8');
+        $description = htmlspecialchars(trim($description), ENT_QUOTES, 'UTF-8');
+        $locationName = htmlspecialchars(trim($locationName), ENT_QUOTES, 'UTF-8');
+        $artistName = htmlspecialchars(trim($artistName), ENT_QUOTES, 'UTF-8');
+        $indigenousGroup = htmlspecialchars(trim($indigenousGroup), ENT_QUOTES, 'UTF-8');
+        $culturalSignificance = htmlspecialchars(trim($culturalSignificance), ENT_QUOTES, 'UTF-8');
+        
+        // Convert art_type to match ENUM values
+        $artType = strtolower(str_replace([' ', '-'], '_', $artType));
+        $validArtTypes = ['rock_art', 'bark_painting', 'contemporary', 'sculpture', 'ceremonial', 'other'];
+        if (!in_array($artType, $validArtTypes)) {
+            $artType = 'other';
+        }
+        
+        // Convert time_period to match ENUM values
+        $timePeriod = strtolower($timePeriod);
+        $validPeriods = ['ancient', 'historical', 'contemporary'];
+        if (!in_array($timePeriod, $validPeriods)) {
+            $timePeriod = 'contemporary';
+        }
+        
+        $latitude = (float)$latitude;
+        $longitude = (float)$longitude;
+        
+        // Set status (admin submissions auto-approved)
         $status = isAdmin() ? 'approved' : 'pending';
 
-        // Insert art entry
+        // Insert art entry using ACTUAL database schema
         $stmt = $pdo->prepare(
             "INSERT INTO art_entries
-            (title, artist, culture, year_created, medium, description,
-             location, latitude, longitude, image_url, submitted_by, status, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())"
+            (user_id, title, description, art_type, time_period, location_name,
+             latitude, longitude, location_sensitivity, indigenous_group,
+             cultural_significance, artist_name, status, submitted_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())"
         );
 
         $stmt->execute([
-            $title, $artist, $culture, $yearCreated, $medium, $description,
-            $location, $latitude, $longitude, $imageUrl, $userId, $status
+            $userId, $title, $description, $artType, $timePeriod, $locationName,
+            $latitude, $longitude, $locationSensitivity, $indigenousGroup,
+            $culturalSignificance, $artistName, $status
         ]);
+
+        $entryId = $pdo->lastInsertId();
 
         return [
             'success' => true,
             'message' => 'Art entry created successfully!',
-            'entry_id' => $pdo->lastInsertId(),
+            'entry_id' => $entryId,
             'status' => $status
         ];
 
@@ -110,24 +124,24 @@ function createArtEntry($pdo, $data) {
         error_log("Create Art Entry Error: " . $e->getMessage());
         return [
             'success' => false,
-            'message' => 'Failed to create art entry. Please try again.'
+            'message' => 'Database error: ' . $e->getMessage()
         ];
     }
 }
 
 /**
- * Get all art entries with optional filters
+ * Get all art entries with optional filters - FIXED
  *
  * @param PDO $pdo Database connection
- * @param array $filters Optional filters (status, culture, user_id)
+ * @param array $filters Optional filters (status, art_type, user_id)
  * @return array Response with success status and entries
  */
 function getArtEntries($pdo, $filters = []) {
     try {
-        // Base query
+        // Base query using actual schema
         $query = "SELECT ae.*, u.username as submitted_by_username
                   FROM art_entries ae
-                  LEFT JOIN users u ON ae.submitted_by = u.user_id
+                  LEFT JOIN users u ON ae.user_id = u.user_id
                   WHERE 1=1";
 
         $params = [];
@@ -138,32 +152,24 @@ function getArtEntries($pdo, $filters = []) {
             $params[] = $filters['status'];
         }
 
-        if (isset($filters['culture'])) {
-            $query .= " AND ae.culture = ?";
-            $params[] = $filters['culture'];
+        if (isset($filters['art_type'])) {
+            $query .= " AND ae.art_type = ?";
+            $params[] = $filters['art_type'];
         }
 
         if (isset($filters['user_id'])) {
-            $query .= " AND ae.submitted_by = ?";
+            $query .= " AND ae.user_id = ?";
             $params[] = $filters['user_id'];
         }
 
-        // Only show approved entries to non-admin users
-        if (!isAdmin() && !isset($filters['user_id'])) {
-            $query .= " AND ae.status = 'approved'";
-        }
-
-        // Order by creation date (newest first)
-        $query .= " ORDER BY ae.created_at DESC";
+        $query .= " ORDER BY ae.submitted_at DESC";
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
-        $entries = $stmt->fetchAll();
 
         return [
             'success' => true,
-            'entries' => $entries,
-            'count' => count($entries)
+            'entries' => $stmt->fetchAll(PDO::FETCH_ASSOC)
         ];
 
     } catch (PDOException $e) {
@@ -177,38 +183,24 @@ function getArtEntries($pdo, $filters = []) {
 }
 
 /**
- * Get single art entry by ID
- *
- * @param PDO $pdo Database connection
- * @param int $entryId Entry ID
- * @return array Response with success status and entry data
+ * Get a single art entry by ID - FIXED
  */
-function getArtEntry($pdo, $entryId) {
+function getArtEntryById($pdo, $entryId) {
     try {
         $stmt = $pdo->prepare(
-            "SELECT ae.*, u.username as submitted_by_username
+            "SELECT ae.*, u.username as submitted_by_username, u.user_id
              FROM art_entries ae
-             LEFT JOIN users u ON ae.submitted_by = u.user_id
+             LEFT JOIN users u ON ae.user_id = u.user_id
              WHERE ae.entry_id = ?"
         );
 
         $stmt->execute([$entryId]);
-        $entry = $stmt->fetch();
+        $entry = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$entry) {
             return [
                 'success' => false,
                 'message' => 'Art entry not found.'
-            ];
-        }
-
-        // Check permissions - only show pending entries to admin or owner
-        if ($entry['status'] !== 'approved' &&
-            !isAdmin() &&
-            getCurrentUserId() != $entry['submitted_by']) {
-            return [
-                'success' => false,
-                'message' => 'Access denied.'
             ];
         }
 
@@ -227,270 +219,105 @@ function getArtEntry($pdo, $entryId) {
 }
 
 /**
- * Update art entry
- *
- * @param PDO $pdo Database connection
- * @param int $entryId Entry ID
- * @param array $data Updated data
- * @return array Response with success status and message
+ * Update art entry status (approve/reject)
  */
-function updateArtEntry($pdo, $entryId, $data) {
+function updateArtEntryStatus($pdo, $entryId, $status) {
     try {
-        // Get existing entry
-        $result = getArtEntry($pdo, $entryId);
-        if (!$result['success']) {
-            return $result;
-        }
-
-        $entry = $result['entry'];
-
-        // Check permissions - only admin or owner can update
-        if (!isAdmin() && getCurrentUserId() != $entry['submitted_by']) {
+        // Check if user is admin
+        if (!isAdmin()) {
             return [
                 'success' => false,
-                'message' => 'Access denied.'
+                'message' => 'Unauthorized. Admin access required.'
             ];
         }
 
-        // Build update query dynamically based on provided fields
-        $updateFields = [];
-        $params = [];
-
-        $allowedFields = [
-            'title', 'artist', 'culture', 'year_created', 'medium',
-            'description', 'location', 'latitude', 'longitude', 'image_url'
-        ];
-
-        foreach ($allowedFields as $field) {
-            if (isset($data[$field])) {
-                if ($field === 'latitude' || $field === 'longitude') {
-                    // Validate coordinates
-                    if (!is_numeric($data[$field])) {
-                        return [
-                            'success' => false,
-                            'message' => "Invalid $field value."
-                        ];
-                    }
-                    $updateFields[] = "$field = ?";
-                    $params[] = (float)$data[$field];
-                } elseif ($field === 'year_created') {
-                    $updateFields[] = "$field = ?";
-                    $params[] = $data[$field] ? (int)$data[$field] : null;
-                } elseif ($field === 'image_url') {
-                    $updateFields[] = "$field = ?";
-                    $params[] = filter_var($data[$field], FILTER_SANITIZE_URL);
-                } else {
-                    $updateFields[] = "$field = ?";
-                    $params[] = htmlspecialchars(trim($data[$field]), ENT_QUOTES, 'UTF-8');
-                }
-            }
-        }
-
-        if (empty($updateFields)) {
+        $validStatuses = ['pending', 'approved', 'rejected'];
+        if (!in_array($status, $validStatuses)) {
             return [
                 'success' => false,
-                'message' => 'No fields to update.'
+                'message' => 'Invalid status.'
             ];
         }
 
-        // Add updated_at timestamp
-        $updateFields[] = "updated_at = NOW()";
-
-        // Add entry ID to params
-        $params[] = $entryId;
-
-        // Execute update
-        $query = "UPDATE art_entries SET " . implode(', ', $updateFields) . " WHERE entry_id = ?";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute($params);
+        $stmt = $pdo->prepare("UPDATE art_entries SET status = ? WHERE entry_id = ?");
+        $stmt->execute([$status, $entryId]);
 
         return [
             'success' => true,
-            'message' => 'Art entry updated successfully!'
+            'message' => "Entry status updated to $status."
         ];
 
     } catch (PDOException $e) {
-        error_log("Update Art Entry Error: " . $e->getMessage());
+        error_log("Update Entry Status Error: " . $e->getMessage());
         return [
             'success' => false,
-            'message' => 'Failed to update art entry.'
+            'message' => 'Failed to update entry status.'
         ];
     }
 }
 
 /**
  * Delete art entry
- *
- * @param PDO $pdo Database connection
- * @param int $entryId Entry ID
- * @return array Response with success status and message
  */
 function deleteArtEntry($pdo, $entryId) {
     try {
-        // Get existing entry
-        $result = getArtEntry($pdo, $entryId);
-        if (!$result['success']) {
-            return $result;
+        $userId = getCurrentUserId();
+        
+        // Check if user owns the entry or is admin
+        $stmt = $pdo->prepare("SELECT user_id FROM art_entries WHERE entry_id = ?");
+        $stmt->execute([$entryId]);
+        $entry = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$entry) {
+            return ['success' => false, 'message' => 'Entry not found.'];
         }
 
-        $entry = $result['entry'];
-
-        // Check permissions - only admin or owner can delete
-        if (!isAdmin() && getCurrentUserId() != $entry['submitted_by']) {
-            return [
-                'success' => false,
-                'message' => 'Access denied.'
-            ];
+        if ($entry['user_id'] != $userId && !isAdmin()) {
+            return ['success' => false, 'message' => 'Unauthorized.'];
         }
 
-        // Delete entry
         $stmt = $pdo->prepare("DELETE FROM art_entries WHERE entry_id = ?");
         $stmt->execute([$entryId]);
 
         return [
             'success' => true,
-            'message' => 'Art entry deleted successfully!'
+            'message' => 'Art entry deleted successfully.'
         ];
 
     } catch (PDOException $e) {
-        error_log("Delete Art Entry Error: " . $e->getMessage());
+        error_log("Delete Entry Error: " . $e->getMessage());
         return [
             'success' => false,
-            'message' => 'Failed to delete art entry.'
+            'message' => 'Failed to delete entry.'
         ];
     }
 }
 
 /**
- * Approve art entry (admin only)
- *
- * @param PDO $pdo Database connection
- * @param int $entryId Entry ID
- * @return array Response with success status and message
+ * Get approved art entries (for public browse)
  */
-function approveArtEntry($pdo, $entryId) {
-    try {
-        // Check admin permissions
-        if (!isAdmin()) {
-            return [
-                'success' => false,
-                'message' => 'Access denied. Admin privileges required.'
-            ];
-        }
-
-        // Update status
-        $stmt = $pdo->prepare(
-            "UPDATE art_entries SET status = 'approved', updated_at = NOW() WHERE entry_id = ?"
-        );
-        $stmt->execute([$entryId]);
-
-        if ($stmt->rowCount() === 0) {
-            return [
-                'success' => false,
-                'message' => 'Art entry not found.'
-            ];
-        }
-
-        return [
-            'success' => true,
-            'message' => 'Art entry approved successfully!'
-        ];
-
-    } catch (PDOException $e) {
-        error_log("Approve Art Entry Error: " . $e->getMessage());
-        return [
-            'success' => false,
-            'message' => 'Failed to approve art entry.'
-        ];
-    }
+function getApprovedEntries($pdo) {
+    return getArtEntries($pdo, ['status' => 'approved']);
 }
 
 /**
- * Reject art entry (admin only)
- *
- * @param PDO $pdo Database connection
- * @param int $entryId Entry ID
- * @return array Response with success status and message
+ * Get pending entries for admin review
  */
-function rejectArtEntry($pdo, $entryId) {
-    try {
-        // Check admin permissions
-        if (!isAdmin()) {
-            return [
-                'success' => false,
-                'message' => 'Access denied. Admin privileges required.'
-            ];
-        }
-
-        // Update status
-        $stmt = $pdo->prepare(
-            "UPDATE art_entries SET status = 'rejected', updated_at = NOW() WHERE entry_id = ?"
-        );
-        $stmt->execute([$entryId]);
-
-        if ($stmt->rowCount() === 0) {
-            return [
-                'success' => false,
-                'message' => 'Art entry not found.'
-            ];
-        }
-
-        return [
-            'success' => true,
-            'message' => 'Art entry rejected.'
-        ];
-
-    } catch (PDOException $e) {
-        error_log("Reject Art Entry Error: " . $e->getMessage());
+function getPendingEntries($pdo) {
+    if (!isAdmin()) {
         return [
             'success' => false,
-            'message' => 'Failed to reject art entry.'
+            'message' => 'Unauthorized.',
+            'entries' => []
         ];
     }
+    return getArtEntries($pdo, ['status' => 'pending']);
 }
 
 /**
- * Get art entry statistics
- *
- * @param PDO $pdo Database connection
- * @return array Statistics data
+ * Get user's submissions
  */
-function getArtStatistics($pdo) {
-    try {
-        $stats = [];
-
-        // Total entries by status
-        $stmt = $pdo->query(
-            "SELECT status, COUNT(*) as count FROM art_entries GROUP BY status"
-        );
-        $stats['by_status'] = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-
-        // Total entries by culture
-        $stmt = $pdo->query(
-            "SELECT culture, COUNT(*) as count FROM art_entries
-             WHERE status = 'approved'
-             GROUP BY culture
-             ORDER BY count DESC
-             LIMIT 10"
-        );
-        $stats['by_culture'] = $stmt->fetchAll();
-
-        // Total entries
-        $stmt = $pdo->query("SELECT COUNT(*) FROM art_entries");
-        $stats['total'] = $stmt->fetchColumn();
-
-        return [
-            'success' => true,
-            'statistics' => $stats
-        ];
-
-    } catch (PDOException $e) {
-        error_log("Get Statistics Error: " . $e->getMessage());
-        return [
-            'success' => false,
-            'message' => 'Failed to retrieve statistics.'
-        ];
-    }
+function getUserEntries($pdo, $userId) {
+    return getArtEntries($pdo, ['user_id' => $userId]);
 }
-
 ?>

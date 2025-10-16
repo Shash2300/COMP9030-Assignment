@@ -589,6 +589,39 @@ function initSubmitForm() {
         imageUpload.addEventListener('change', handleImageUpload);
     }
 
+    // Make upload area clickable
+    const uploadArea = document.getElementById('upload-area');
+    if (uploadArea && imageUpload) {
+        uploadArea.addEventListener('click', () => {
+            imageUpload.click();
+        });
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.backgroundColor = 'var(--primary-light)';
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '';
+            uploadArea.style.backgroundColor = '';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '';
+            uploadArea.style.backgroundColor = '';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageUpload.files = files;
+                handleImageUpload({ target: { files: files } });
+            }
+        });
+    }
+
     // Sensitivity toggle
     const sensitivityRadios = document.querySelectorAll('input[name="sensitivity"]');
     const exactLocationFields = document.querySelector('.exact-location-fields');
