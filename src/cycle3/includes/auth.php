@@ -104,11 +104,11 @@ function registerUser($pdo, $username, $email, $password, $role = 'user') {
 
         // Insert new user
         $stmt = $pdo->prepare(
-            "INSERT INTO users (username, email, password_hash, role, created_at)
-             VALUES (?, ?, ?, ?, NOW())"
+            "INSERT INTO users (username, email, password_hash, full_name, user_role, created_at)
+             VALUES (?, ?, ?, ?, ?, NOW())"
         );
 
-        $stmt->execute([$username, $email, $hashedPassword, $role]);
+        $stmt->execute([$username, $email, $hashedPassword, $username, $role]);
 
         return [
             'success' => true,
@@ -145,7 +145,7 @@ function loginUser($pdo, $username, $password) {
 
         // Check if user exists (by username or email)
         $stmt = $pdo->prepare(
-            "SELECT user_id, username, email, password_hash, role
+            "SELECT user_id, username, email, password_hash, user_role as role
              FROM users
              WHERE username = ? OR email = ?"
         );

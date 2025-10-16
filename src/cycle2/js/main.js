@@ -758,7 +758,7 @@ function initAuthForms() {
             e.preventDefault();
 
             // Validate passwords match
-            const password = document.getElementById('password');
+            const password = document.getElementById('reg-password');
             const confirmPassword = document.getElementById('confirm-password');
 
             if (password && confirmPassword && password.value !== confirmPassword.value) {
@@ -767,11 +767,11 @@ function initAuthForms() {
             }
 
             const userData = {
-                username: document.getElementById('username').value,
-                email: document.getElementById('email').value,
+                username: document.getElementById('reg-username').value,
+                email: document.getElementById('reg-email').value,
                 password: password.value,
-                full_name: document.getElementById('full-name').value,
-                user_role: document.getElementById('user-role').value || 'artist'
+                full_name: document.getElementById('reg-username').value,
+                user_role: document.querySelector('input[name="role"]:checked')?.value || 'artist'
             };
 
             const submitBtn = registerForm.querySelector('button[type="submit"]');
