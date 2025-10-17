@@ -1,19 +1,6 @@
 /**
- * Indigenous Art Atlas - Main Stylesheet
- * Cycle 2: Frontend Prototype
- * COMP9030 Assignment
- *
- * Design System:
- * Primary Color: #D2691E (Sienna - earthy, connected to ochre)
- * Secondary Color: #8B4513 (Saddle Brown)
- * Accent: #CD853F (Peru - warm earth tone)
- * Dark: #3E2723 (Deep Brown)
- * Light: #F5F5DC (Beige)
- * Success: #4CAF50
- * Warning: #FF9800
- * Error: #F44336
- */
-
+ *  Main Stylesheet
+ * root css file for styling every Front end page 
 /* ========== CSS Reset & Base Styles ========== */
 * {
     margin: 0;

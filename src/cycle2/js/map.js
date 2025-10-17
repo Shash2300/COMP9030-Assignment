@@ -1,9 +1,6 @@
 /**
- * Indigenous Art Atlas - Map JavaScript
- * Cycle 2: Frontend Prototype
- * COMP9030 Assignment
- *
- * This file handles:
+ * Map JavaScript
+ * This file handles multiple functions for map interaction 
  * - Interactive Leaflet map initialization
  * - Art location markers
  * - Map popups with art information

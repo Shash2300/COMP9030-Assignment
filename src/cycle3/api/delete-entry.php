@@ -13,9 +13,6 @@
  * AI Acknowledgment: API structure and delete logic
  * developed with assistance from Claude AI (Anthropic)
  *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
  */
 
 // Set JSON response header

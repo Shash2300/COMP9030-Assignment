@@ -13,9 +13,6 @@
  * AI Acknowledgment: Database connection structure and security
  * best practices implemented with assistance from Claude AI (Anthropic)
  *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
  */
 
 // Database configuration constants

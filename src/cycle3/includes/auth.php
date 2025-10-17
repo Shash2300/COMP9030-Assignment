@@ -15,9 +15,6 @@
  * AI Acknowledgment: Authentication logic and security patterns
  * developed with assistance from Claude AI (Anthropic)
  *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
  */
 
 // Start session if not already started

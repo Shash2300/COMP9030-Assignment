@@ -1,5 +1,6 @@
 -- ============================================================================
 -- Indigenous Art Atlas - Updated Database Schema
+-- For newer version of SQL
 -- ============================================================================
 -- This is the ACTUAL schema used by the working application
 -- Updated to match the implemented backend APIs

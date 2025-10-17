@@ -229,12 +229,8 @@ Create comprehensive documentation for the Cycle 3 backend including:
 ### AI Output
 Generated `README.md` with complete documentation covering all aspects of setup, usage, and testing.
 
-### Personal Interpretation
-Clear documentation is essential for the oral presentation and for other developers to understand the system. The README provides step-by-step instructions for setting up the backend, which will be useful for demonstrating the full-stack functionality in the Cycle 3 presentation.
 
-**File**: `src/cycle3/README.md`
 
----
 
 ## Summary of AI Usage
 
@@ -246,10 +242,7 @@ Clear documentation is essential for the oral presentation and for other develop
 5. `api/*.php` (10 files) - REST API endpoints (100% AI-generated, reviewed)
 6. `README.md` - Documentation (80% AI-generated, 20% project-specific additions)
 
-### Total Code Statistics:
-- **Total Lines**: ~1,850 lines of PHP and SQL
-- **AI-Generated**: ~1,600 lines (86%)
-- **Human-Written/Adapted**: ~250 lines (14%)
+
 
 ### What I Learned:
 1. **Security Best Practices**: Understanding PDO prepared statements, password hashing, and input sanitization
@@ -273,3 +266,355 @@ All AI-generated code was:
 OpenAI. (2024). ChatGPT (GPT-4, October 2024 version) [Large language model]. https://chat.openai.com/
 
 Anthropic. (2024). Claude (3.5 Sonnet, October 2024 version) [Large language model]. https://claude.ai/
+
+
+
+
+
+
+
+# AI Acknowledgement - Frontend Development
+
+## Declaration
+
+I acknowledge the use of **Claude (Claude 3.5 Sonnet, October 2024)** in debugging and fixing issues with the Indigenous Art Atlas frontend submission system.
+
+The prompts and outputs from this AI tool are documented below, along with my personal interpretation and modifications.
+
+---
+
+## 1. Admin Login System Fix
+
+### Issue Identified
+The admin login form was not submitting properly due to:
+- Incorrect database file path in `admin-login.php`
+- Wrong SQL column name for user role checking
+- CORS errors when opening files directly
+
+### Prompt
+```
+The admin login page doesn't seem to be submitting even though the database is there. 
+What can I do?
+
+[Provided files: compatible_setup.sql, admin-login.html, admin-login.js, admin-login.php]
+```
+
+### AI Solution
+1. **Database Path Fix** in `admin-login.php`:
+   - Changed: `require_once '../cycle3/config/database.php';`
+   - To: `require_once '../config/dbconn.php';`
+
+2. **SQL Query Fix**:
+   - Changed: `WHERE email = ? AND (user_type = 'admin' OR role = 'admin')`
+   - To: `WHERE email = ? AND (user_type = 'admin' OR user_role = 'admin')`
+
+3. **CORS Solution**:
+   - Identified that opening HTML files directly (`file:///`) causes CORS errors
+   - Provided instructions to run a local web server using `php -S localhost:8000`
+
+### Personal Understanding
+I learned that modern browsers block AJAX requests from `file://` URLs to `http://` URLs for security reasons. This is why a local web server is necessary for testing PHP applications. The database column mismatch shows the importance of verifying schema against queries.
+
+**Files Modified**:
+- `src/cycle3/api/admin-login.php` (2 lines changed)
+
+---
+
+## 2. Art Submission Form - Multi-Step Navigation
+
+### Issue Identified
+The submit art form's multi-step navigation wasn't working:
+- Next/Back buttons had no event handlers
+- Form data wasn't being stored between steps
+- Map coordinates weren't validating properly
+
+### Prompt
+```
+Submit art forms are not working. When I click on the map and get longitude/latitude 
+in the form field but it still says "please select a point on the map"
+```
+
+### AI Solution
+Created a comprehensive fix for `submit-art.js` that:
+
+1. **Navigation System**:
+```javascript
+// Fixed button event handlers
+function setupButtonHandlers() {
+    document.querySelectorAll('.form-actions button').forEach(button => {
+        button.removeAttribute('onclick');
+        
+        if (button.classList.contains('btn-primary')) {
+            button.addEventListener('click', handleNextStep);
+        } else if (button.classList.contains('btn-secondary')) {
+            button.addEventListener('click', handlePrevStep);
+        }
+    });
+}
+```
+
+2. **Map Coordinate Validation Fix**:
+```javascript
+function validateStep2() {
+    // Check both formData and input fields for coordinates
+    const latInput = document.querySelector('input[name="latitude"]');
+    const lngInput = document.querySelector('input[name="longitude"]');
+    
+    const hasFormDataCoords = formData.latitude && formData.longitude;
+    const hasInputCoords = latInput && lngInput && latInput.value && lngInput.value;
+    
+    if (!hasFormDataCoords && !hasInputCoords) {
+        showError('location-error', 'Please select a location on the map');
+        return false;
+    }
+    
+    // Update formData if coordinates exist in inputs
+    if (hasInputCoords && !hasFormDataCoords) {
+        formData.latitude = latInput.value;
+        formData.longitude = lngInput.value;
+    }
+    return true;
+}
+```
+
+3. **Complete Form Submission Handler**:
+```javascript
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    // Collect all form fields including coordinates
+    formData.append('latitude', formData.latitude || latInput?.value || '');
+    formData.append('longitude', formData.longitude || lngInput?.value || '');
+    
+    const response = await fetch('../cycle3/api/create-entry.php', {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+    });
+}
+```
+
+### Personal Understanding
+The issue was that the validation was only checking the JavaScript `formData` object but not the actual input field values. When users clicked on the map, the coordinates were being set in the input fields but not synced with the formData object. The fix checks both locations and syncs them, ensuring validation passes regardless of how the data was set.
+
+**File Created**: `submit-art-complete.js` (450+ lines)
+
+---
+
+## 3. Database Schema Mapping
+
+### Issue Identified
+Form submission was failing because:
+- Form was sending numeric IDs but database expected enum values
+- Missing field mappings between form and database schema
+
+### Prompt
+```
+The form was sending art_type_id but database expects art_type (enum)
+Form was sending art_period_id but database expects time_period (enum)
+```
+
+### AI Solution
+Created mapping functions in `create-entry.php`:
+
+```php
+// Map form values to database enum values
+$art_type_map = [
+    '1' => 'rock_art',
+    '2' => 'rock_art', 
+    '3' => 'contemporary',
+    '4' => 'sculpture',
+    '5' => 'contemporary',
+    '6' => 'contemporary'
+];
+
+$period_map = [
+    '1' => 'ancient',
+    '2' => 'historical',
+    '3' => 'contemporary',
+    '4' => 'contemporary'
+];
+
+// Convert form values to enums
+$art_type_enum = $art_type_map[$art_type_form] ?? 'other';
+$time_period_enum = $period_map[$art_period_form] ?? 'contemporary';
+```
+
+### Personal Understanding
+This mapping is necessary because the HTML form uses numeric values in dropdowns for simplicity, but the database uses descriptive enum values for clarity and data integrity. The mapping ensures compatibility between frontend and backend without changing either structure.
+
+**File Modified**: `src/cycle3/api/create-entry.php` (20+ lines added)
+
+---
+
+## 4. Image Upload Functionality
+
+### Issue Identified
+The image upload feature needed:
+- Drag and drop support
+- File type and size validation
+- Preview functionality
+- Multiple file handling (up to 6 images)
+
+### AI Solution
+Implemented complete image handling:
+
+```javascript
+function setupImageUpload() {
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('image-upload');
+    
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    // File validation
+    function handleFiles(files) {
+        for (let file of files) {
+            if (uploadedImages.length >= 6) {
+                alert('Maximum 6 images allowed');
+                break;
+            }
+            
+            if (!file.type.match(/image\/(jpeg|png)/)) {
+                alert('Only JPG and PNG allowed');
+                continue;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File too large (max 5MB)');
+                continue;
+            }
+            
+            uploadedImages.push(file);
+            showImagePreview(file);
+        }
+    }
+}
+```
+
+### Personal Understanding
+The drag-and-drop functionality enhances user experience by allowing intuitive file uploads. The validation ensures server resources aren't wasted on invalid files. The 6-image limit and 5MB size restriction are reasonable constraints for web applications to prevent abuse while allowing sufficient documentation of artworks.
+
+---
+
+## 5. Form Validation System
+
+### Issue Identified
+Each step needed specific validation:
+- Step 1: Required fields (title, description, type, period)
+- Step 2: Location selection
+- Step 3: Optional image upload with warning
+- Step 4: Optional artist information
+- Step 5: Agreement checkboxes
+
+### AI Solution
+Created step-specific validation:
+
+```javascript
+function validateCurrentStep() {
+    switch(currentStep) {
+        case 1:
+            // Validate required fields
+            if (!title.value.trim()) {
+                showError('title-error', 'Title is required');
+                return false;
+            }
+            // ... other validations
+            break;
+            
+        case 2:
+            // Check coordinates from both sources
+            if (!hasFormDataCoords && !hasInputCoords) {
+                showError('location-error', 'Please select a location');
+                return false;
+            }
+            break;
+            
+        case 3:
+            // Optional but warn if no images
+            if (uploadedImages.length === 0) {
+                if (!confirm('No images uploaded. Continue without images?')) {
+                    return false;
+                }
+            }
+            break;
+            
+        case 5:
+            // Check all agreement boxes
+            const checks = ['permission-check', 'cultural-check', 'guidelines-check'];
+            return checks.every(id => document.getElementById(id)?.checked);
+    }
+    return true;
+}
+```
+
+### Personal Understanding
+The validation strategy respects the different requirements of each step. Required fields use inline error messages for immediate feedback, while optional fields use confirmation dialogs. The final step requires explicit agreement to submission guidelines, ensuring legal and cultural compliance.
+
+---
+
+## 6. CSS and Chrome Extension Conflicts
+
+### Issue Identified
+Chrome extensions were injecting CSS that broke the page layout:
+- `chrome-extension://kbfnbcaeplbcioakkpcpgfkobkghlhen/src/css/` errors
+
+### AI Solution
+1. Identified that the errors were from Chrome extensions, not the application
+2. Provided inline style fixes to override extension interference
+3. Focused on making JavaScript work despite CSS issues
+
+### Personal Understanding
+Browser extensions can inject styles and scripts into web pages, sometimes causing conflicts. The solution was to ensure the JavaScript functionality worked independently of styling issues, proving that separation of concerns (structure/style/behavior) is important for robust applications.
+
+---
+
+## Summary of AI Assistance
+
+### Problems Solved:
+1.  Admin login database connection and authentication
+2.  Multi-step form navigation
+3.  Map coordinate validation
+4.  Database field mapping
+5.  Image upload with validation
+6.  Form submission to database
+7.  CORS and local server setup
+
+### Key Learnings:
+1. **CORS Policy**: Browsers block cross-origin requests from file:// URLs
+2. **Event Delegation**: Properly attaching event listeners after DOM changes
+3. **Data Synchronization**: Keeping form fields and JavaScript objects in sync
+4. **Progressive Enhancement**: Making forms work even with CSS failures
+5. **Validation Strategy**: Different approaches for required vs optional fields
+
+### Files Created/Modified:
+- `submit-art-complete.js` - Complete rewrite with all fixes
+- `create-entry-complete.php` - Enhanced with field mapping and validation
+- `admin-login-fixed.php` - Fixed database path and SQL query
+- Various troubleshooting guides and scripts
+
+### Testing Approach:
+All solutions were tested for:
+- ✓ Form navigation between all 5 steps
+- ✓ Field validation with appropriate error messages
+- ✓ Map interaction and coordinate storage
+- ✓ Image upload with drag-and-drop
+- ✓ Database submission with correct field mapping
+- ✓ Admin authentication flow
+
+---
+
+## References
+
+Anthropic. (2024). Claude (3.5 Sonnet, October 2024 version) [Large language model]. https://claude.ai/
+
+Indigenous Art Atlas Project. (2024). COMP9030 Assignment Repository.

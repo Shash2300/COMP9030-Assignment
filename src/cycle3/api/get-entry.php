@@ -12,9 +12,6 @@
  * AI Acknowledgment: API structure and data retrieval
  * developed with assistance from Claude AI (Anthropic)
  *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
  */
 
 // Set JSON response header

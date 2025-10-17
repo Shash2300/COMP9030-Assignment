@@ -14,9 +14,6 @@
  * AI Acknowledgment: CRUD operations and data validation patterns
  * developed with assistance from Claude AI (Anthropic)
  *
- * @package IndigenousArtAtlas
- * @author Shishir Saurav
- * @version 1.0
  */
 
 require_once __DIR__ . '/../config/dbconn.php';
